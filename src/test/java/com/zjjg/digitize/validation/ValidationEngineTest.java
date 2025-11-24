@@ -2,14 +2,14 @@ package com.zjjg.digitize.validation;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.zjjg.digitize.validation.ValidationRule;
 import com.zjjg.digitize.validation.validators.RequiredValidator;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.List;
-import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.Locale;
+
+import static org.junit.Assert.*;
 
 /**
  * 验证引擎测试类
