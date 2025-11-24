@@ -71,6 +71,7 @@ public class ValidationEngineTest {
         // 创建验证规则，只有当isRegister为true时才验证username必填
         String jsonRulesStr = "[{\"fieldName\":\"username\",\"validatorType\":\"required\",\"errorMessageKey\":\"username.required\",\"condition\":{\"conditionType\":\"equals\",\"fieldName\":\"isRegister\",\"compareValue\":true}}]";
 
+        System.out.println(jsonRulesStr);
         JSONArray jsonRules = JSONArray.parseArray(jsonRulesStr);
         List<ValidationRule> rules = validationEngine.parseRules(jsonRules);
 

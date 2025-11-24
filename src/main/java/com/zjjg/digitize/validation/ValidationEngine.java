@@ -175,6 +175,4 @@ public class ValidationEngine {
         return defaultMessage;
     }
 
-    public void setMessageSource(MessageSource messageSource) { this.messageSource = messageSource; }
-    public void setDefaultLocale(Locale defaultLocale) { this.defaultLocale = defaultLocale; }
 }
