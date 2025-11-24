@@ -21,7 +21,7 @@ public class RequiredValidator extends BaseValidator {
                     fieldName,
                     "FIELD_REQUIRED",
                     String.format("Field '%s' is required", fieldName),
-                    "validation.field.required",
+                    "validation.required",
                     params
             );
         }

@@ -2,10 +2,9 @@ package com.zjjg.digitize.validation;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.zjjg.digitize.i18n.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,11 +24,7 @@ public class ValidationEngine {
      */
     private Map<String, Validator> validatorMap = new HashMap<>();
 
-    /**
-     * 国际化消息源
-     */
-    @Autowired(required = false)
-    private MessageSource messageSource;
+
 
     /**
      * 构造函数，自动注入所有验证器实例
@@ -143,13 +138,12 @@ public class ValidationEngine {
                     error.setErrorMessageKey(rule.getErrorMessageKey());
                 }
                 // 国际化错误信息
-                if (messageSource != null && error.getErrorMessageKey() != null) {
+                if (error.getErrorMessageKey() != null) {
                     try {
-                        String localizedMessage = messageSource.getMessage(
+                        String localizedMessage = MessageService.getMessage(
                                 error.getErrorMessageKey(),
-                                error.getErrorMessageParams() != null ? error.getErrorMessageParams().values().toArray() : null,
-                                error.getErrorMessage(),
-                                LocaleContextHolder.getLocale()
+                                Locale.getDefault(),
+                                error.getErrorMessageParams() != null ? error.getErrorMessageParams().values().toArray() : null
                         );
                         error.setErrorMessage(localizedMessage);
                     } catch (Exception e) {

@@ -49,7 +49,7 @@ public class MaxLengthValidator extends BaseValidator {
                     fieldName,
                     "MAX_LENGTH_EXCEEDED",
                     String.format("Field '%s' must be at most %d characters long", fieldName, maxLength),
-                    "validation.max.length.exceeded",
+                    "validation.max.length",
                     params
             );
         }

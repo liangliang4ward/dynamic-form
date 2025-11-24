@@ -42,7 +42,7 @@ public class EmailValidator extends BaseValidator {
                     fieldName,
                     "EMAIL_INVALID_FORMAT",
                     String.format("Field '%s' is not a valid email address", fieldName),
-                    "validation.email.invalid.format",
+                    "validation.email.invalid",
                     params
             );
         }

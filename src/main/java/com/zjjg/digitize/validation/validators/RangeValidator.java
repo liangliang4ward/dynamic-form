@@ -54,7 +54,7 @@ public class RangeValidator extends BaseValidator {
                     fieldName,
                     "RANGE_BELOW_MIN",
                     String.format("Field '%s' must be at least %.2f", fieldName, min),
-                    "validation.range.below.min",
+                    "validation.range.min",
                     params
             );
         }
@@ -64,7 +64,7 @@ public class RangeValidator extends BaseValidator {
                     fieldName,
                     "RANGE_ABOVE_MAX",
                     String.format("Field '%s' must be at most %.2f", fieldName, max),
-                    "validation.range.above.max",
+                    "validation.range.max",
                     params
             );
         }

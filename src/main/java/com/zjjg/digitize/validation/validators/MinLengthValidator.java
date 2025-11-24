@@ -49,7 +49,7 @@ public class MinLengthValidator extends BaseValidator {
                     fieldName,
                     "MIN_LENGTH_NOT_MET",
                     String.format("Field '%s' must be at least %d characters long", fieldName, minLength),
-                    "validation.min.length.not.met",
+                    "validation.min.length",
                     params
             );
         }
