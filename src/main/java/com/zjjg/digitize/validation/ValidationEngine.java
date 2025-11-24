@@ -7,7 +7,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -70,6 +73,9 @@ public class ValidationEngine {
         for (ValidationRule rule : rules) {
             if (!isConditionSatisfied(rule.getCondition(), formData)) {
                 continue;
+            }
+            if(rule.getErrorMessageParams()==null){
+                rule.setErrorMessageParams(new ArrayList<>());
             }
 
             Validator validator = validatorRegistry.get(rule.getValidatorType());
