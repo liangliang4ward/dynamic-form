@@ -1,11 +1,11 @@
 package com.zjjg.digitize.controller;
 
+import com.zjjg.digitize.common.ApiResponse;
 import com.zjjg.digitize.validation.ValidationEngine;
 import com.zjjg.digitize.validation.ValidationResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class ValidationController {
      * @return 验证结果
      */
     @PostMapping("/validate")
-    public ResponseEntity<ValidationResult> validate(@RequestBody ValidationRequest request) {
+    public ApiResponse<ValidationResult> validate(@RequestBody ValidationRequest request) {
         try {
             log.debug("Received validation request: rules={}, formData={}", request.getRules(), request.getFormData());
 
@@ -39,7 +39,7 @@ public class ValidationController {
 
             log.debug("Validation result: isValid={}, errors={}", result.isValid(), result.getErrors());
 
-            return ResponseEntity.ok(result);
+            return ApiResponse.success(result);
         } catch (Exception e) {
             log.error("Validation failed", e);
             ValidationResult result = ValidationResult.failure(
@@ -52,7 +52,7 @@ public class ValidationController {
                             null
                     )
             );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+            return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Validation failed", result);
         }
     }
 

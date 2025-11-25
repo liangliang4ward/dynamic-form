@@ -1,13 +1,12 @@
 package com.zjjg.digitize.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zjjg.digitize.common.ApiResponse;
 import com.zjjg.digitize.entity.Form;
 import com.zjjg.digitize.entity.FormField;
 import com.zjjg.digitize.mapper.FormFieldMapper;
 import com.zjjg.digitize.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -25,71 +24,71 @@ public class FormController {
 
     // Create a new form
     @PostMapping
-    public ResponseEntity<Form> createForm(@RequestBody Form form) {
+    public ApiResponse<Form> createForm(@RequestBody Form form) {
         formService.save(form);
-        return new ResponseEntity<>(form, HttpStatus.CREATED);
+        return ApiResponse.success(form);
     }
 
     // Get form by id
     @GetMapping("/{id}")
-    public ResponseEntity<Form> getFormById(@PathVariable Long id) {
+    public ApiResponse<Form> getFormById(@PathVariable Long id) {
         Form form = formService.getById(id);
-        return form != null ? ResponseEntity.ok(form) : ResponseEntity.notFound().build();
+        return form != null ? ApiResponse.success(form) : ApiResponse.error(404, "Form not found");
     }
 
     // Get all forms
     @GetMapping
-    public ResponseEntity<List<Form>> getAllForms() {
+    public ApiResponse<List<Form>> getAllForms() {
         List<Form> forms = formService.list();
-        return ResponseEntity.ok(forms);
+        return ApiResponse.success(forms);
     }
 
     // Update form
     @PutMapping("/{id}")
-    public ResponseEntity<Form> updateForm(@PathVariable Long id, @RequestBody Form form) {
+    public ApiResponse<Form> updateForm(@PathVariable Long id, @RequestBody Form form) {
         if (formService.getById(id) == null) {
-            return ResponseEntity.notFound().build();
+            return ApiResponse.error(404, "Form not found");
         }
         form.setId(id);
         formService.updateById(form);
-        return ResponseEntity.ok(form);
+        return ApiResponse.success(form);
     }
 
     // Delete form
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteForm(@PathVariable Long id) {
+    public ApiResponse<Void> deleteForm(@PathVariable Long id) {
         if (formService.getById(id) == null) {
-            return ResponseEntity.notFound().build();
+            return ApiResponse.error(404, "Form not found");
         }
         formService.removeById(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.success();
     }
 
     // Add form fields
     @PostMapping("/{formId}/fields")
-    public ResponseEntity<List<FormField>> addFormFields(@PathVariable Long formId, @RequestBody List<FormField> fields) {
+    public ApiResponse<List<FormField>> addFormFields(@PathVariable Long formId, @RequestBody List<FormField> fields) {
         fields.forEach(field -> field.setFormId(formId));
         fields.forEach(formFieldMapper::insert);
-        return new ResponseEntity<>(fields, HttpStatus.CREATED);
+        return ApiResponse.success(fields);
     }
 
     // Get form fields
     @GetMapping("/{formId}/fields")
-    public ResponseEntity<List<FormField>> getFormFields(@PathVariable Long formId) {
+    public ApiResponse<List<FormField>> getFormFields(@PathVariable Long formId) {
         List<FormField> fields = formFieldMapper.selectByFormId(formId);
-        return ResponseEntity.ok(fields);
+        return ApiResponse.success(fields);
     }
 
     // Publish form
     @PostMapping("/{formId}/publish")
-    public ResponseEntity<Boolean> publishForm(@PathVariable Long formId) {
+    public ApiResponse<Boolean> publishForm(@PathVariable Long formId) {
         try {
             boolean result = formService.publishForm(formId);
-            return ResponseEntity.ok(result);
+            return ApiResponse.success(result);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(false);
+            return ApiResponse.error(400, e.getMessage(), false);
         } catch (SQLException e) {
-            return ResponseEntity.internalServerError().body(false);
+            return ApiResponse.error(500, e.getMessage(), false);
         }
     }
 }
