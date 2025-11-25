@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjjg.digitize.mapper.FormFieldMapper">
+    <resultMap id="FormFieldResultMap" type="com.zjjg.digitize.entity.FormField">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="form_id" property="formId" jdbcType="BIGINT"/>
+        <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+        <result column="field_type" property="fieldType" jdbcType="VARCHAR"/>
+        <result column="field_label" property="fieldLabel" jdbcType="VARCHAR"/>
+        <result column="field_length" property="fieldLength" jdbcType="INTEGER"/>
+        <result column="primary_key" property="primaryKey" jdbcType="BOOLEAN"/>
+        <result column="not_null" property="notNull" jdbcType="BOOLEAN"/>
+        <result column="default_value" property="defaultValue" jdbcType="VARCHAR"/>
+        <result column="sort_order" property="sortOrder" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="selectByFormId" resultMap="FormFieldResultMap">
+        SELECT * FROM sys_form_field WHERE form_id = #{formId} ORDER BY sort_order
+    </select>
+</mapper>
