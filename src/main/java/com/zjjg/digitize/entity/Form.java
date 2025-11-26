@@ -18,6 +18,8 @@ public class Form {
     private String description;
     private String status; // draft, published
     private String tableName;
+    private String templateCode; // Unique code for template
+    private Boolean isTemplate; // Whether this form is a template
     private Long createdBy;
     private LocalDateTime createTime;
     private Long updatedBy;

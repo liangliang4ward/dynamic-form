@@ -1,5 +1,6 @@
 package com.zjjg.digitize.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zjjg.digitize.common.ApiResponse;
 import com.zjjg.digitize.entity.Form;
@@ -90,5 +91,68 @@ public class FormController {
         } catch (SQLException e) {
             return ApiResponse.error(500, e.getMessage(), false);
         }
+    }
+
+    // Create form template
+    @PostMapping("/templates")
+    public ApiResponse<Form> createFormTemplate(@RequestBody Form form) {
+        form.setIsTemplate(true);
+        formService.save(form);
+        return ApiResponse.success(form);
+    }
+
+    // Get form templates
+    @GetMapping("/templates")
+    public ApiResponse<List<Form>> getFormTemplates() {
+        QueryWrapper<Form> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_template", true);
+        List<Form> templates = formService.list(queryWrapper);
+        return ApiResponse.success(templates);
+    }
+
+    // Get form template by code
+    @GetMapping("/templates/{templateCode}")
+    public ApiResponse<Form> getFormTemplateByCode(@PathVariable String templateCode) {
+        QueryWrapper<Form> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_template", true);
+        queryWrapper.eq("template_code", templateCode);
+        List<Form> templates = formService.list(queryWrapper);
+        return templates.isEmpty() ? ApiResponse.error(404, "Template not found") : ApiResponse.success(templates.get(0));
+    }
+
+    // Create form from template
+    @PostMapping("/from-template/{templateCode}")
+    public ApiResponse<Form> createFormFromTemplate(@PathVariable String templateCode, @RequestBody Form form) {
+        QueryWrapper<Form> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("is_template", true);
+        queryWrapper.eq("template_code", templateCode);
+        List<Form> templates = formService.list(queryWrapper);
+        if (templates.isEmpty()) {
+            return ApiResponse.error(404, "Template not found");
+        }
+        Form template = templates.get(0);
+        // Create new form with template fields
+        form.setIsTemplate(false);
+        form.setStatus("draft");
+        formService.save(form);
+        
+        // Copy fields from template
+        List<FormField> templateFields = formFieldMapper.selectByFormId(template.getId());
+        for (FormField field : templateFields) {
+            FormField newField = new FormField();
+            newField.setFormId(form.getId());
+            newField.setFieldName(field.getFieldName());
+            newField.setFieldType(field.getFieldType());
+            newField.setFieldLabel(field.getFieldLabel());
+            newField.setFieldLength(field.getFieldLength());
+            newField.setPrimaryKey(field.isPrimaryKey());
+            newField.setNotNull(field.isNotNull());
+            newField.setDefaultValue(field.getDefaultValue());
+            newField.setSortOrder(field.getSortOrder());
+            newField.setValidationRules(field.getValidationRules());
+            formFieldMapper.insert(newField);
+        }
+        
+        return ApiResponse.success(form);
     }
 }
